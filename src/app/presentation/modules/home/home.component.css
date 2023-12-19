@@ -1,0 +1,22 @@
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+
+  :is(h2) {
+    margin-bottom: 100px;
+  }
+}
+
+.current-deposit {
+  font-size: 20px;
+  margin-bottom: 23px;
+}
+
+textarea.machine-messages {
+  resize: none;
+  font-size: 20px;
+  line-height: 30px;
+  text-align: right;
+}

@@ -1,0 +1,103 @@
+<ng-container *ngIf="!(vendingStoreStateStream$ | async).productRows">
+
+  <div class="loader-container">
+    <h2>Loading goods in our Ultra Vending Machine...</h2>
+    <mat-spinner></mat-spinner>
+  </div>
+
+</ng-container>
+
+<ng-container *ngIf="(vendingStoreStateStream$ | async) as VendingStore">
+
+  <ng-container *ngIf="(vendingStoreStateStream$ | async).productRows as ProductRows">
+
+    <div class="vending-machine">
+
+      <div class="card-container" [ngClass]="{ 'product-in-action' : selectedProduct, }">
+
+        <div class="product-row">
+          <ng-container *ngFor="let cell of ProductRows.row1">
+
+            <ng-container *ngTemplateOutlet="cellCard; context: {cell}"></ng-container>
+
+          </ng-container>
+        </div>
+
+        <div class="product-row">
+          <ng-container *ngFor="let cell of ProductRows.row2">
+
+            <ng-container *ngTemplateOutlet="cellCard; context: {cell}"></ng-container>
+
+          </ng-container>
+        </div>
+
+        <div class="product-row">
+          <ng-container *ngFor="let cell of ProductRows.row3">
+
+            <ng-container *ngTemplateOutlet="cellCard; context: {cell}"></ng-container>
+
+          </ng-container>
+        </div>
+
+        <div class="product-row">
+          <ng-container *ngFor="let cell of ProductRows.row4">
+
+            <ng-container *ngTemplateOutlet="cellCard; context: {cell}"></ng-container>
+
+          </ng-container>
+        </div>
+
+      </div>
+
+      <div class="vending-controls">
+        <h3>Current Deposit</h3>
+        <p class="current-deposit">{{ VendingStore.deposit }} €</p>
+
+        <div>
+          <mat-form-field class="example-form-field">
+            <mat-label>Deposit Value</mat-label>
+            <input matInput #depositInput type="number" step="0.50" min="0" max="5" [(ngModel)]="currentDepositValue">
+          </mat-form-field>
+          <p>We only accept: 0.5€, 1€, 2€, 5€</p>
+        </div>
+
+        <div>
+          <button mat-raised-button color="primary" [disabled]="!depositInput" (click)="deposit()">Insert Deposit</button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div>
+          <mat-form-field class="example-full-width">
+            <textarea class="machine-messages" matInput [rows]="4" readonly="true" [value]="currentMachineMessage"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <button mat-raised-button color="primary" [disabled]="!selectedProduct" (click)="purchase()">Purchase</button>
+        </div>
+
+        <div>
+          <button mat-raised-button color="primary" [disabled]="!selectedProduct" (click)="clearSelection()">Clear selection</button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div>
+          <button mat-raised-button color="primary" [disabled]="VendingStore.deposit === 0" (click)="cancel()">Cancel and return deposit</button>
+        </div>
+
+      </div>
+    </div>
+
+  </ng-container>
+</ng-container>
+
+<ng-template #cellCard let-cell="cell">
+  <div class="card" #card (click)="selectProduct(card, cell, cell.product)">
+    <img [src]="cell.product.productImages.main.small" alt="">
+    <p>{{ cell.product.name }}</p>
+    <p><b>Price: {{ cell.product.price }}€</b></p>
+    <p>Quantity left: {{ cell.quantity }}</p>
+  </div>
+</ng-template>
